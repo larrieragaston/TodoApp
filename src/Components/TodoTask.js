@@ -7,7 +7,7 @@ function TodoTask (props) {
             <div>
                 <Checkbox
                     checked={props.task.completed}
-                    onChange={() => props.handleChange(props.task.id)}
+                    onChange={() => props.handleChange(props.task)}
                 /> 
                 <p style={props.task.completed ? completedStyle : null}>{props.task.text}</p>
                 <Divider/>

@@ -1,46 +1,60 @@
 import React from 'react';
 import TodoTask from './Components/TodoTask';
-import todosData from './Data/todosData';
-import { Spin } from 'antd';
+// import todosData from './Data/todosData';
+// import { Spin } from 'antd';
 import "antd/dist/antd.css";
+import axios from 'axios';
 
 class App extends React.Component {
   constructor(){
     super();
     this.state = {
-      todos: todosData,
-      isLoading: true
+      todos: []
     }
-    this.handleChange = this.handleChange.bind(this);
+    //this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount(){
-    setTimeout(() => {
-      this.setState({
-        todos: todosData,
-        isLoading: false
+    axios.get('http://localhost:4000/')
+      .then(response => {
+        this.setState({ todos: response.data })
       })
-    }, 1500)
+      .catch((error) => {
+        console.log(error);
+      })
   }
 
-  handleChange(id) {
-    this.setState(prevState => {
-      const updatedTodos = prevState.todos.map(todo => {
-          if(todo.id === id){
-            todo.completed = !todo.completed;
-          } 
-          return todo;
+  handleChange = (task) => {
+    const item = {
+      _id: task._id,
+      text: task.text,
+      completed: !task.completed
+    };
+
+    axios.post('http://localhost:4000/update/' + item._id, item)
+      .then(res => {
+        console.log(res.data) 
+        this.setState(prevState => {
+          const updatedTodos = prevState.todos.map(todo => {
+              if(todo._id === task._id){
+                return item;//todo.completed = !todo.completed;
+              } 
+              return todo;
+            });
+          return {todos: updatedTodos}
         });
-      return {todos: updatedTodos}
-    });
+      })
+      .catch((error) => console.log(error));
+
+
   }
 
   render(){
-    const todoTasks = this.state.todos.map(task => <TodoTask key={task.id} task={task} handleChange={this.handleChange}/>);
+    let todoTasks = this.state.todos.map(task => <TodoTask key={task._id} task={task} handleChange={this.handleChange}/>); 
 
     return (
       <div className="App">
-        {this.state.isLoading ? <Spin /> : todoTasks}
+        {todoTasks}
       </div>
     );
   }
