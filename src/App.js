@@ -1,9 +1,13 @@
 import React from 'react';
+
 import TodoTask from './Components/TodoTask';
-// import todosData from './Data/todosData';
-// import { Spin } from 'antd';
-import "antd/dist/antd.css";
+import { Typography } from 'antd';
+
+import 'antd/dist/antd.css';
 import axios from 'axios';
+
+const { Title } = Typography;
+const baseURL = 'http://localhost:4000';
 
 class App extends React.Component {
   constructor(){
@@ -11,11 +15,10 @@ class App extends React.Component {
     this.state = {
       todos: []
     }
-    //this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount(){
-    axios.get('http://localhost:4000/')
+    axios.get(baseURL)
       .then(response => {
         this.setState({ todos: response.data })
       })
@@ -31,13 +34,13 @@ class App extends React.Component {
       completed: !task.completed
     };
 
-    axios.post('http://localhost:4000/update/' + item._id, item)
+    axios.put(`${baseURL}/update/` + item._id, item)
       .then(res => {
         console.log(res.data) 
         this.setState(prevState => {
           const updatedTodos = prevState.todos.map(todo => {
               if(todo._id === task._id){
-                return item;//todo.completed = !todo.completed;
+                return item;
               } 
               return todo;
             });
@@ -53,7 +56,8 @@ class App extends React.Component {
     let todoTasks = this.state.todos.map(task => <TodoTask key={task._id} task={task} handleChange={this.handleChange}/>); 
 
     return (
-      <div className="App">
+      <div className='App'>
+        <Title>Todo List</Title>
         {todoTasks}
       </div>
     );

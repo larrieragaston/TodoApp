@@ -8,8 +8,8 @@ router.route('/').get((req, res) => {
       .catch(err => res.status(400).json('Error: ' + err));
   });
 
-router.route('/update/:id').post((req, res) => {
-    console.log("updating item", req.body);
+router.route('/update/:id').put((req, res) => {
+    console.log('updating item', req.body);
     Item.findById(req.params.id)
         .then(item => {
             item.completed = Boolean(req.body.completed)

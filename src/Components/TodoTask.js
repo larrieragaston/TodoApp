@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
 import { Checkbox, Divider } from 'antd';
 
 function TodoTask (props) {
-    const completedStyle = {fontStyle: "italic", textDecoration: "line-through"}
+    const completedStyle = {fontStyle: 'italic', textDecoration: 'line-through'}
     return (
             <div>
                 <Checkbox
